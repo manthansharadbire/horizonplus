@@ -1,10 +1,10 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 
 function MovieInfo() {
-  const [movieInfo, setMovieInfo] = useState([]);
+  const [movieInfo, setMovieInfo] = useState()
 
   const { imdbID } = useParams();
 
@@ -38,7 +38,7 @@ function MovieInfo() {
   return (
     <div>
     <div>
-      <h1>{Title}</h1>
+      <h1>{movieInfo?.Title}</h1>
       <h1>{Year}</h1>
       Rated={Rated}
       Released={Released}
