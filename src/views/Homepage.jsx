@@ -1,28 +1,36 @@
 import React from "react";
 import MovieCard from "./../components/MovieCard";
+import Loader from "./../components/Loader";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 
+
 function Homepage() {
   const [searchMovie, setSearchMovie] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const [homepageMovieCards, setHomepageMovieCards] = useState([]);
 
   const fetchSearchedMovieCards = async (query) => {
+    setIsLoading(true)
     const response = await axios.get(
       `${import.meta.env.VITE_API_URL}/?s=${query}&apikey=${import.meta.env.VITE_API_KEY}`
     );
-    setHomepageMovieCards(response.data.Search || []);
+    setIsLoading(false)
+    const allMoviews = response?.data?.Search || []
+    setHomepageMovieCards(allMoviews);
+
+    if(allMoviews.length==0){
+      toast.error("No movies found for this search")
+    }
   };
 
   const handleSearch = () => {
     fetchSearchedMovieCards(searchMovie);
-    if(searchMovie){
-    toast.success(`Showing results for ${searchMovie}`)}
     if(!searchMovie){
-        toast.error("Enter valid name for a Movie or TV Show")
+        toast.error("Oops! Nothing to search")
     };
   };
 
@@ -31,6 +39,8 @@ function Homepage() {
     setSearchMovie("");
     if(searchMovie){
     toast.success("Your search has been cleared");}
+    if(!searchMovie){
+        toast.error("Oops! Nothing to clear");}
   };
 
   const navigate = useNavigate();
@@ -86,6 +96,7 @@ function Homepage() {
         })}
       </div>
       <Toaster />
+      <Loader loading={isLoading} loadingText={"Please wait..."}/>
     </div>
   );
 }
