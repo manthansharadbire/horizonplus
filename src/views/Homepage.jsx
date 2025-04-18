@@ -5,7 +5,6 @@ import axios from "axios";
 import { useState } from "react";
 import { toast, Toaster } from "react-hot-toast";
 
-
 function Homepage() {
   const [searchMovie, setSearchMovie] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -13,32 +12,36 @@ function Homepage() {
   const [homepageMovieCards, setHomepageMovieCards] = useState([]);
 
   const fetchSearchedMovieCards = async (query) => {
-    setIsLoading(true)
+    setIsLoading(true);
     const response = await axios.get(
       `${import.meta.env.VITE_API_URL}/?s=${query}&apikey=${import.meta.env.VITE_API_KEY}`
     );
-    setIsLoading(false)
-    const allMoviews = response?.data?.Search || []
-    setHomepageMovieCards(allMoviews);
-
-    if(allMoviews.length==0){
-      toast.error("No movies found for this search")
+    setIsLoading(false);
+    const allMovies = response?.data?.Search || [];
+    setHomepageMovieCards(allMovies);
+    if (query && allMovies.length === 0) {
+      toast.error(`No results found for "${query}"`);
     }
+    setHomepageMovieCards(allMovies);
   };
 
   const handleSearch = () => {
     fetchSearchedMovieCards(searchMovie);
-    if(!searchMovie){
+
+    if (!searchMovie) {
+      toast.error("Please enter a Movie or Tv Show");
       return;
-    };
+    }
   };
 
   const clearSearch = () => {
     fetchSearchedMovieCards("");
     setSearchMovie("");
-    if(!searchMovie){
-  return;
-  }};
+    if (!searchMovie) {
+      toast.error("Nothing to clear");
+      return;
+    }
+  };
 
   return (
     <div>
@@ -75,20 +78,16 @@ function Homepage() {
         </button>
         <div className="flex flex-wrap justify-center"></div>
         {homepageMovieCards.map((movieObj, i) => {
-          const { Poster, Title, Year,} = movieObj;
+          const { Poster } = movieObj;
           return (
             <div key={i}>
-              <MovieCard
-                Poster={Poster}
-                Title={Title} 
-                Year={Year}
-              />
+              <MovieCard Poster={Poster} />
             </div>
           );
         })}
       </div>
       <Toaster />
-      <Loader loading={isLoading} loadingText={"Please wait..."}/>
+      <Loader loading={isLoading} loadingText={"Please wait..."} />
     </div>
   );
 }
