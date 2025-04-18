@@ -16,4 +16,4 @@ function Loader({loading, loadingText}) {
   )
 }
 
-export default Loader
+export default Loader;

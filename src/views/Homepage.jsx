@@ -3,7 +3,6 @@ import MovieCard from "./../components/MovieCard";
 import Loader from "./../components/Loader";
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 
 
@@ -30,24 +29,16 @@ function Homepage() {
   const handleSearch = () => {
     fetchSearchedMovieCards(searchMovie);
     if(!searchMovie){
-        toast.error("Oops! Nothing to search")
+      return;
     };
   };
 
   const clearSearch = () => {
     fetchSearchedMovieCards("");
     setSearchMovie("");
-    if(searchMovie){
-    toast.success("Your search has been cleared");}
     if(!searchMovie){
-        toast.error("Oops! Nothing to clear");}
-  };
-
-  const navigate = useNavigate();
-
-  const handleNavigation = (path) => {
-    navigate(path);
-  };
+  return;
+  }};
 
   return (
     <div>
@@ -84,12 +75,13 @@ function Homepage() {
         </button>
         <div className="flex flex-wrap justify-center"></div>
         {homepageMovieCards.map((movieObj, i) => {
-          const { Poster, imdbID } = movieObj;
+          const { Poster, Title, Year,} = movieObj;
           return (
             <div key={i}>
               <MovieCard
                 Poster={Poster}
-                onClick={() => handleNavigation(`/movie/${imdbID}`)}
+                Title={Title} 
+                Year={Year}
               />
             </div>
           );
