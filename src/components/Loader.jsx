@@ -1,5 +1,5 @@
 import React from 'react'
-import {Loader as LoaderIcon } from "lucide-react"
+import {Loader as LoaderIcon } from 'lucide-react'
 
 function Loader({loading, loadingText}) {
     if(!loading){
